@@ -14,6 +14,8 @@ router.post('/login', Controller.user_login)
 
 router.get('/submit', Controller.user_submit)
 
+router.get('/logout', Controller.user_logout)
+
 
 
 module.exports = router
