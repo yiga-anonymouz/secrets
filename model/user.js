@@ -6,15 +6,6 @@ const session = require('express-session')
 const passportLocalMongoose = require('passport-local-mongoose');
 const app = express()
 
-app.use(session({
-    secret: 'keyboard cat',
-    resave: false,
-    saveUninitialized: false
-  }))
-app.use(passport.initialize());
-app.use(passport.session());
-
-
 const userSchema = new mongoose.Schema({
     email: String,
     password: String
@@ -23,6 +14,9 @@ const userSchema = new mongoose.Schema({
 userSchema.plugin(passportLocalMongoose);
 
 const Users = new mongoose.model('user', userSchema)
+
+passport.use(Users.createStrategy());
+
 
 
 module.exports = {

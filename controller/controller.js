@@ -1,11 +1,10 @@
 const UsersModel = require(`../model/user`)
-const passport = require('passport')
+const passport = UsersModel.passport
 const Users = UsersModel.Users
 const ejs = require('ejs')
 
 
 
-passport.use(Users.createStrategy());
 
 passport.serializeUser(Users.serializeUser());
 passport.deserializeUser(Users.deserializeUser());
@@ -55,8 +54,9 @@ const user_login = (req, res) => {
 }
 
 const user_secret = (req , res) => {
-    if(req.isAuthenticated){
+    if(req.isAuthenticated()){
         res.render('secrets')
+        console.log(req.isAuthenticated)
     }else{
         res.redirect('/login')
     }
