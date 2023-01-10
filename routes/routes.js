@@ -16,6 +16,8 @@ router.get('/submit', Controller.user_submit)
 
 router.get('/logout', Controller.user_logout)
 
+router.get('/secrets', Controller.user_secret)
+
 
 
 module.exports = router
