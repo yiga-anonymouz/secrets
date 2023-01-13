@@ -18,6 +18,12 @@ router.get('/logout', Controller.user_logout)
 
 router.get('/secrets', Controller.user_secret)
 
+router.get('/auth/google', Controller.google_auth)
+
+router.get('/auth/google/secrets', Controller.google_auth_redirect, function(req, res) {
+    // Successful authentication, redirect home.
+   res.redirect('/secrets');
+})
 
 
 module.exports = router

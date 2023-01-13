@@ -1,13 +1,35 @@
 const UsersModel = require(`../model/user`)
 const passport = UsersModel.passport
 const Users = UsersModel.Users
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const ejs = require('ejs')
 
 
 
 
-passport.serializeUser(Users.serializeUser());
-passport.deserializeUser(Users.deserializeUser());
+passport.serializeUser(function(Users, cb) {
+    process.nextTick(function() {
+      cb(null, { id: Users.id, username: Users.username });
+    });
+  });
+  
+  passport.deserializeUser(function(Users, cb) {
+    process.nextTick(function() {
+      return cb(null, Users);
+    });
+  });
+
+passport.use(new GoogleStrategy({
+    clientID: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
+    callbackURL: "http://localhost:3000/auth/google/secrets"
+  },
+  function(accessToken, refreshToken, profile, cb) {
+    Users.findOrCreate({ googleId: profile.id }, function (err, user) {
+      return cb(err, user);
+    });
+  }
+));
 
 
 
@@ -72,6 +94,12 @@ const user_logout = (req , res) => {
       })
     res.redirect('/')
 }
+
+const google_auth =  passport.authenticate('google', { scope: ['profile'] })
+
+const google_auth_redirect = passport.authenticate('google', { failureRedirect: '/login' })
+
+
 module.exports = {
     user_index,
     user_register,
@@ -80,5 +108,7 @@ module.exports = {
     user_login,
     user_submit,
     user_logout,
-    user_secret
+    user_secret,
+    google_auth,
+    google_auth_redirect
 }
